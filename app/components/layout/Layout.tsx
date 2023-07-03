@@ -36,7 +36,6 @@ import {
   FiChevronDown,
 } from 'react-icons/fi';
 import { IconType } from 'react-icons';
-import NavLink from '../NavLink';
 
 interface LinkItemProps {
   name: string;

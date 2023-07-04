@@ -12,11 +12,6 @@ import {
   Select,
   Stack,
   Text,
-  RangeSlider,
-  RangeSliderTrack,
-  RangeSliderThumb,
-  RangeSliderFilledTrack,
-  RangeSliderMark,
   Button,
 } from '@chakra-ui/react'
 import { FiSearch } from 'react-icons/fi'
@@ -40,8 +35,25 @@ const columnsTable = [
   }
 ]
 
+type DataTableType = {
+  id: number,
+  title: string,
+  description: string,
+  category: string,
+  price: number
+}
+
+const minPrice = 0
+const maxPrice = 100000000
+
 const DashboardPage = () => {
-  const [data, setData] = useState([])
+  const [filteredData, setFilteredData] = useState<DataTableType[]>([])
+  const [initData, setInitData] = useState<DataTableType[]>([])
+  
+  const [keyword, setKeyword] = useState('')
+  const [category, setCategory] = useState('')
+  const [price, setPrice] = useState([minPrice, maxPrice])
+  
   const [categories, setCategories] = useState([])
   
   useEffect(() => {
@@ -52,7 +64,8 @@ const DashboardPage = () => {
   const getTableData = async() => {
     try {
       const res = await axios.get('/api/products')
-      setData(res.data.products)
+      setInitData(res.data.products)
+      setFilteredData(res.data.products)
     } catch (error) {
       console.log(error)
     }
@@ -65,6 +78,27 @@ const DashboardPage = () => {
     } catch (error) {
       console.log(error)
     }
+  }
+  
+  const applyFilter = () => {
+    if (!keyword && !category && price[0] === minPrice && price[1] === maxPrice) {
+      setFilteredData(initData)
+      
+      return
+    }
+    
+    const baseData = [...initData].filter((dt) => {
+      if (
+        (keyword ? (dt.title.toUpperCase().indexOf(keyword.toUpperCase()) > -1) : true) &&
+        (category ? (dt.category === category) : true) &&
+        ((price[0] !== minPrice && price[1] !== maxPrice) ? (dt.price <= minPrice && dt.price >= maxPrice) : true)
+      ) {
+        return true
+      }
+      return false
+    })
+    
+    setFilteredData(baseData)
   }
   
   return (
@@ -91,13 +125,13 @@ const DashboardPage = () => {
                 <InputLeftElement pointerEvents='none'>
                   <FiSearch color='gray.300' />
                 </InputLeftElement>
-                <Input placeholder='Search products' />
+                <Input placeholder='Search products' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
               </InputGroup>
             </Box>
             
             <Box>
               <Text mb={1}>Category</Text>
-              <Select placeholder='Select category'>
+              <Select placeholder='Select category' value={category} onChange={(e) => setCategory(e.target.value)}>
                 {categories.map((category: any, index: number) => (
                   <option key={index} value={category}>{category.split('-').join(' ')}</option>
                 ))}
@@ -106,7 +140,7 @@ const DashboardPage = () => {
             
             <Box>
               <Text mb={1}>Price</Text>
-              <PriceSlider />
+              <PriceSlider onSliderChange={setPrice} />
             </Box>
             
             <Button
@@ -114,7 +148,9 @@ const DashboardPage = () => {
               color={'white'}
               _hover={{
                 bg: 'blue.600',
-              }}>
+              }}
+              onClick={applyFilter}
+            >
               Apply
             </Button>
           </Stack>
@@ -133,7 +169,7 @@ const DashboardPage = () => {
           <Box mt={5}>
             <DataTable
               columns={columnsTable}
-              data={data}
+              data={filteredData}
             />
           </Box>
         </Box>

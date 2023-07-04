@@ -1,17 +1,7 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Select,
-  Stack,
-  Text,
   RangeSlider,
   RangeSliderTrack,
   RangeSliderThumb,
@@ -27,7 +17,11 @@ type DenominalType = {
   result: number
 }
 
-const PriceSlider = () => {
+type ComponentProps = {
+  onSliderChange?: ([]) => void
+}
+
+const PriceSlider = ({onSliderChange}: ComponentProps) => {
   const [sliderValue, setSliderValue] = useState([0, 100000000])
   const [sliderMark, setSliderMark] = useState(['0', '100jt'])
   
@@ -45,6 +39,10 @@ const PriceSlider = () => {
     
     const minValue = Math.pow(1000, min?.index) * min.result
     const maxValue = Math.pow(1000, max?.index) * max.result
+    
+    if (onSliderChange) {
+      onSliderChange([minValue, maxValue])
+    }
     
     setSliderValue([minValue, maxValue])
     setSliderMark([(min.result + min.label), (max.result + max.label)])

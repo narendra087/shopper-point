@@ -39,10 +39,11 @@ const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentPr
 
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('')
-  const [price, setPrice] = useState([minPrice, maxPrice])
+  const [price, setPrice] = useState<number[]>([])
   
   useEffect(() => {
     if (isOpen) {
+      console.log('update init')
       setInitFilter({keyword, category, price})
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +108,7 @@ const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentPr
               
               <Box>
                 <Text mb={1}>Price</Text>
-                <PriceSlider onSliderChange={setPrice} />
+                <PriceSlider onSliderChange={setPrice} initialPrice={price} />
               </Box>
             </Stack>
           </DrawerBody>

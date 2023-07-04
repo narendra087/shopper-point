@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   RangeSlider,
   RangeSliderTrack,
@@ -10,19 +10,20 @@ import {
 } from '@chakra-ui/react'
 
 type ComponentProps = {
+  initialPrice?: number[]
   onSliderChange?: ([]) => void
 }
 
-const PriceSlider = ({onSliderChange}: ComponentProps) => {
+const PriceSlider = ({initialPrice, onSliderChange}: ComponentProps) => {
   const minValue = 0
   const maxValue = 5000
   
-  const [sliderValue, setSliderValue] = useState([minValue, maxValue])
-  const [sliderMark, setSliderMark] = useState(['$0', '$5000'])
+  const [sliderValue, setSliderValue] = useState([initialPrice?.[0] || minValue, initialPrice?.[1] || maxValue])
+  const [sliderMark, setSliderMark] = useState([`$${initialPrice?.[0] || minValue}`, `$${initialPrice?.[1] || maxValue}`])
   
   const handleSliderChange = (value: number[]) => {
     if (onSliderChange) {
-      onSliderChange([minValue, maxValue])
+      onSliderChange([value[0], value[1]])
     }
     
     const minLabel = `$${value[0]}`
@@ -36,7 +37,7 @@ const PriceSlider = ({onSliderChange}: ComponentProps) => {
     <RangeSlider
       // eslint-disable-next-line jsx-a11y/aria-proptypes
       aria-label={['min', 'max']}
-      defaultValue={[0, 5000]}
+      defaultValue={sliderValue}
       onChange={(val) => handleSliderChange(val)}
       max={5000}
     >

@@ -43,7 +43,6 @@ const columnsTable = [
 const DashboardPage = () => {
   const [data, setData] = useState([])
   const [categories, setCategories] = useState([])
-  const [sliderValue, setSliderValue] = useState([0, 100])
   
   useEffect(() => {
     getTableData()

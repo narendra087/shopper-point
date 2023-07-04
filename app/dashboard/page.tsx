@@ -13,12 +13,15 @@ import {
   Stack,
   Text,
   Button,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { FiSearch } from 'react-icons/fi'
 
 import BreadNav from '../components/BreadNav'
 import DataTable from '../components/datatable/DataTable'
 import PriceSlider from '../components/PriceSlider'
+
+import ProductFilter from '../components/filter/ProductFilter'
 
 import axios from 'axios'
 
@@ -43,17 +46,19 @@ type DataTableType = {
   price: number
 }
 
+type FilterType = {
+  keyword: string,
+  category: string,
+  price: number[]
+}
+
 const minPrice = 0
-const maxPrice = 100000000
+const maxPrice = 10000
 
 const DashboardPage = () => {
+  const {isOpen, onOpen, onClose} = useDisclosure()
   const [filteredData, setFilteredData] = useState<DataTableType[]>([])
   const [initData, setInitData] = useState<DataTableType[]>([])
-  
-  const [keyword, setKeyword] = useState('')
-  const [category, setCategory] = useState('')
-  const [price, setPrice] = useState([minPrice, maxPrice])
-  
   const [categories, setCategories] = useState([])
   
   useEffect(() => {
@@ -80,7 +85,9 @@ const DashboardPage = () => {
     }
   }
   
-  const applyFilter = () => {
+  const onFilter = (filter: FilterType) => {
+    const {keyword, category, price} = filter
+    
     if (!keyword && !category && price[0] === minPrice && price[1] === maxPrice) {
       setFilteredData(initData)
       
@@ -102,79 +109,38 @@ const DashboardPage = () => {
   }
   
   return (
-    <Flex flexDirection={'column'} gap={6}>
-      <Box>
-        <Flex>
-          <Heading size={'xl'}>Dashboard Products</Heading>
-        </Flex>
-        <BreadNav
-          data={[
-            { label: 'Home', path: '/dashboard' },
-          ]}
-        />
-      </Box>
-      
-      <Flex gap={4}>
-        <Box alignSelf={'flex-start'} w={'100%'} flex={1} borderRadius={6} bg={'white'} p={4} position={'sticky'} top={5}>
-          <Heading as={'h2'} size={'lg'}>Filters</Heading>
-          <Divider m={'10px 0 22px'} />
-          <Stack spacing={4}>
-            <Box>
-              <Text mb={1}>Search</Text>
-              <InputGroup>
-                <InputLeftElement pointerEvents='none'>
-                  <FiSearch color='gray.300' />
-                </InputLeftElement>
-                <Input placeholder='Search products' value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-              </InputGroup>
-            </Box>
-            
-            <Box>
-              <Text mb={1}>Category</Text>
-              <Select placeholder='Select category' value={category} onChange={(e) => setCategory(e.target.value)}>
-                {categories.map((category: any, index: number) => (
-                  <option key={index} value={category}>{category.split('-').join(' ')}</option>
-                ))}
-              </Select>
-            </Box>
-            
-            <Box>
-              <Text mb={1}>Price</Text>
-              <PriceSlider onSliderChange={setPrice} />
-            </Box>
-            
-            <Button
-              bg={'blue.500'}
-              color={'white'}
-              _hover={{
-                bg: 'blue.600',
-              }}
-              onClick={applyFilter}
-            >
-              Apply
-            </Button>
-          </Stack>
-        </Box>
-        <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>
-          <Flex justifyContent={'space-between'}>
-            <Heading as={'h2'} size={'lg'}>List Products</Heading>
-            <InputGroup w={'max-content'}>
-              <InputLeftElement pointerEvents='none'>
-                <FiSearch color='gray.300' />
-              </InputLeftElement>
-              <Input placeholder='Search products' />
-            </InputGroup>
+    <>
+      <Flex flexDirection={'column'} gap={6}>
+        <Box>
+          <Flex>
+            <Heading size={'xl'}>Dashboard Products</Heading>
           </Flex>
-          
-          <Box mt={5}>
-            <DataTable
-              columns={columnsTable}
-              data={filteredData}
-            />
-          </Box>
+          <BreadNav
+            data={[
+              { label: 'Home', path: '/dashboard' },
+            ]}
+          />
         </Box>
+        
+        <Flex gap={4} flexDirection={{base:'column', lg:'column'}}>
+          <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>
+            <Flex justifyContent={'space-between'} alignItems={'center'}>
+              <Heading as={'h2'} size={'lg'}>List Products</Heading>
+              <Text onClick={onOpen} cursor={'pointer'} fontSize={'md'}>Filter</Text>
+            </Flex>
+            
+            <Box mt={5}>
+              <DataTable
+                columns={columnsTable}
+                data={filteredData}
+              />
+            </Box>
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+      
+      <ProductFilter isOpen={isOpen} onClose={onClose} categories={categories} onFilter={onFilter} />
+    </>
   )
 }
 

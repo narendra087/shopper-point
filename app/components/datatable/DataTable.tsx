@@ -1,5 +1,5 @@
 import React from "react";
-import { useTable, usePagination } from "react-table";
+import { useTable, usePagination, useSortBy } from "react-table";
 import {
   Table,
   Thead,
@@ -25,6 +25,8 @@ import {
   FiChevronRight,
   FiChevronsRight,
   FiChevronsLeft,
+  FiChevronDown,
+  FiChevronUp,
 } from "react-icons/fi";
 
 type DataTableProps = {
@@ -58,7 +60,8 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
       data,
       initialState: { pageIndex: 0 }
     },
-    usePagination
+    useSortBy,
+    usePagination,
   );
 
   const renderPageInfo = () => {
@@ -145,7 +148,20 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
             {headerGroups.map((headerGroup:any, i:number) => (
               <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
                 {headerGroup.headers.map((column:any, j:number) => (
-                  <Th {...column.getHeaderProps()} key={j}>{column.render("Header")}</Th>
+                  <Th {...column.getHeaderProps(column.getSortByToggleProps())} key={j}>
+                    <Flex alignItems="center">
+                      {column.render("Header")}
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <FiChevronDown style={{marginLeft:'4px',width:'16px',height:'16px'}} />
+                        ) : (
+                          <FiChevronUp style={{marginLeft:'4px',width:'16px',height:'16px'}} />
+                        )
+                      ) : (
+                        ""
+                      )}
+                    </Flex>
+                  </Th>
                 ))}
               </Tr>
             ))}

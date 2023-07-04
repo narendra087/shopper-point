@@ -9,52 +9,36 @@ import {
   RangeSliderMark,
 } from '@chakra-ui/react'
 
-import { denominal } from '../utils/denominal'
-
-type DenominalType = {
-  index: number,
-  label: string,
-  result: number
-}
-
 type ComponentProps = {
   onSliderChange?: ([]) => void
 }
 
 const PriceSlider = ({onSliderChange}: ComponentProps) => {
-  const [sliderValue, setSliderValue] = useState([0, 100000000])
-  const [sliderMark, setSliderMark] = useState(['0', '100jt'])
+  const minValue = 0
+  const maxValue = 5000
+  
+  const [sliderValue, setSliderValue] = useState([minValue, maxValue])
+  const [sliderMark, setSliderMark] = useState(['$0', '$5000'])
   
   const handleSliderChange = (value: number[]) => {
-    let min:DenominalType = {index: 1, label: '', result: 0}
-    let max:DenominalType = {index: 2, label: '', result: 100000000}
-    value.forEach((val, index) => {
-      if (index === 0) {
-        min = denominal(val)
-      }
-      if (index === 1) {
-        max = denominal(val)
-      }
-    })
-    
-    const minValue = Math.pow(1000, min?.index) * min.result
-    const maxValue = Math.pow(1000, max?.index) * max.result
-    
     if (onSliderChange) {
       onSliderChange([minValue, maxValue])
     }
     
-    setSliderValue([minValue, maxValue])
-    setSliderMark([(min.result + min.label), (max.result + max.label)])
+    const minLabel = `$${value[0]}`
+    const maxLabel = `$${value[1]}`
+    
+    setSliderValue([value[0], value[1]])
+    setSliderMark([minLabel, maxLabel])
   }
   
   return (
     <RangeSlider
       // eslint-disable-next-line jsx-a11y/aria-proptypes
       aria-label={['min', 'max']}
-      defaultValue={[0, 100000000]}
+      defaultValue={[0, 5000]}
       onChange={(val) => handleSliderChange(val)}
-      max={100000000}
+      max={5000}
     >
       <RangeSliderMark
         value={sliderValue[0]}
@@ -63,7 +47,8 @@ const PriceSlider = ({onSliderChange}: ComponentProps) => {
         color='white'
         mt='-10'
         ml='-5'
-        w='12'
+        minW='12'
+        px='5px'
         borderRadius={4}
       >
         {sliderMark[0]}
@@ -74,8 +59,9 @@ const PriceSlider = ({onSliderChange}: ComponentProps) => {
         bg='blue.500'
         color='white'
         mt='-10'
-        ml='-5'
-        w='12'
+        ml='-8'
+        minW='12'
+        px='5px'
         borderRadius={4}
       >
         {sliderMark[1]}

@@ -53,7 +53,7 @@ type FilterType = {
 }
 
 const minPrice = 0
-const maxPrice = 10000
+const maxPrice = 5000
 
 const DashboardPage = () => {
   const {isOpen, onOpen, onClose} = useDisclosure()
@@ -88,7 +88,7 @@ const DashboardPage = () => {
   const onFilter = (filter: FilterType) => {
     const {keyword, category, price} = filter
     
-    if (!keyword && !category && price[0] === minPrice && price[1] === maxPrice) {
+    if (!keyword && !category && (price[0] === minPrice && price[1] === maxPrice)) {
       setFilteredData(initData)
       
       return
@@ -98,7 +98,7 @@ const DashboardPage = () => {
       if (
         (keyword ? (dt.title.toUpperCase().indexOf(keyword.toUpperCase()) > -1) : true) &&
         (category ? (dt.category === category) : true) &&
-        ((price[0] !== minPrice && price[1] !== maxPrice) ? (dt.price <= minPrice && dt.price >= maxPrice) : true)
+        ((price[0] !== minPrice || price[1] !== maxPrice) ? (dt.price >= price[0] && dt.price <= price[1]) : true)
       ) {
         return true
       }

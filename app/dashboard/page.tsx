@@ -17,11 +17,13 @@ import {
   RangeSliderThumb,
   RangeSliderFilledTrack,
   RangeSliderMark,
+  Button,
 } from '@chakra-ui/react'
 import { FiSearch } from 'react-icons/fi'
 
 import BreadNav from '../components/BreadNav'
 import DataTable from '../components/datatable/DataTable'
+import PriceSlider from '../components/PriceSlider'
 
 import axios from 'axios'
 
@@ -33,7 +35,6 @@ const columnsTable = [
       {Header: 'Product', accessor: 'title'},
       {Header: 'Description', accessor: 'description'},
       {Header: 'Category', accessor: 'category'},
-      {Header: 'Stock', accessor: 'stock'},
       {Header: 'Price', accessor: 'price'},
     ]
   }
@@ -52,7 +53,6 @@ const DashboardPage = () => {
   const getTableData = async() => {
     try {
       const res = await axios.get('/api/products')
-      console.log(res)
       setData(res.data.products)
     } catch (error) {
       console.log(error)
@@ -62,7 +62,6 @@ const DashboardPage = () => {
   const getCategories = async() => {
     try {
       const res = await axios.get('/api/product-categories')
-      console.log('category', res)
       setCategories(res.data)
     } catch (error) {
       console.log(error)
@@ -108,42 +107,17 @@ const DashboardPage = () => {
             
             <Box>
               <Text mb={1}>Price</Text>
-              <RangeSlider
-                aria-label={['min', 'max']}
-                defaultValue={[0, 100000000]}
-                onChangeEnd={(val) => console.log(val)}
-                max={100000000}
-              >
-                <RangeSliderMark
-                  value={sliderValue[0]}
-                  textAlign='center'
-                  bg='blue.500'
-                  color='white'
-                  mt='-10'
-                  ml='-5'
-                  w='12'
-                >
-                  {sliderValue[0]}%
-                </RangeSliderMark>
-                <RangeSliderMark
-                  value={sliderValue[1]}
-                  textAlign='center'
-                  bg='blue.500'
-                  color='white'
-                  mt='-10'
-                  ml='-5'
-                  w='12'
-                >
-                  {sliderValue[1]}%
-                </RangeSliderMark>
-                <RangeSliderTrack>
-                  <RangeSliderFilledTrack />
-                </RangeSliderTrack>
-                <RangeSliderThumb index={0} />
-                <RangeSliderThumb index={1} />
-              </RangeSlider>
+              <PriceSlider />
             </Box>
             
+            <Button
+              bg={'blue.500'}
+              color={'white'}
+              _hover={{
+                bg: 'blue.600',
+              }}>
+              Apply
+            </Button>
           </Stack>
         </Box>
         <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>

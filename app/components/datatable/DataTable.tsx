@@ -16,7 +16,8 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper
+  NumberDecrementStepper,
+  Box
 } from "@chakra-ui/react";
 
 import {
@@ -60,36 +61,117 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
     usePagination
   );
 
+  const renderPageInfo = () => {
+    return (
+      <Text flexShrink="0" mr={4}>
+        Page{" "}
+        <Text fontWeight="bold" as="span">
+          {pageIndex + 1}
+        </Text>{" "}
+        of{" "}
+        <Text fontWeight="bold" as="span">
+          {pageOptions.length}
+        </Text>
+      </Text>
+    )
+  }
+  
+  const renderPageSelection = () => {
+    return (
+      <>
+        <Text flexShrink="0">Go to page:</Text>{" "}
+        <NumberInput
+          ml={2}
+          mr={4}
+          w={28}
+          min={1}
+          max={pageOptions.length}
+          onChange={(value: any) => {
+            const page = value ? value - 1 : 0;
+            gotoPage(page);
+          }}
+          defaultValue={pageIndex + 1}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </>
+    )
+  }
+  
+  const renderLimitSelection = () => {
+    return (
+      <Select
+        w={32}
+        value={pageSize}
+        onChange={(e) => {
+          setPageSize(Number(e.target.value));
+        }}
+      >
+        {[10, 20, 30, 40, 50].map((pageSize) => (
+          <option key={pageSize} value={pageSize}>
+            Show {pageSize}
+          </option>
+        ))}
+      </Select>
+    )
+  }
+  
+  const paginationOptionsMobile = () => {
+    return (
+      <Flex alignItems={{base:"start", sm:'center'}} gap={2} justifyContent='space-between' flexDirection={{base:'column', sm: 'row'}}>
+        {renderPageInfo()}
+        
+        <Flex alignItems={{base:'start', sm:'center'}} gap={2} flexDirection={{base:'column', sm:'row'}}>
+          <Flex alignItems='center'>
+            {renderPageSelection()}
+          </Flex>
+          
+          {renderLimitSelection()}
+        </Flex>
+      </Flex>
+    )
+  }
+
   // Render the UI for your table
   return (
     <>
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup:any, i:number) => (
-            <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
-              {headerGroup.headers.map((column:any, j:number) => (
-                <Th {...column.getHeaderProps()} key={j}>{column.render("Header")}</Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {page.map((row:any, i:number) => {
-            prepareRow(row);
-            return (
-              <Tr {...row.getRowProps()} key={i}>
-                {row.cells.map((cell:any, j:number) => {
-                  return (
-                    <Td {...cell.getCellProps()} key={j}>{cell.render("Cell")}</Td>
-                  );
-                })}
+      <Box overflow={'auto'}>
+        <Table {...getTableProps()} minW={'500px'}>
+          <Thead>
+            {headerGroups.map((headerGroup:any, i:number) => (
+              <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                {headerGroup.headers.map((column:any, j:number) => (
+                  <Th {...column.getHeaderProps()} key={j}>{column.render("Header")}</Th>
+                ))}
               </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
+            ))}
+          </Thead>
+          <Tbody {...getTableBodyProps()}>
+            {page.map((row:any, i:number) => {
+              prepareRow(row);
+              return (
+                <Tr {...row.getRowProps()} key={i}>
+                  {row.cells.map((cell:any, j:number) => {
+                    return (
+                      <Td {...cell.getCellProps()} key={j}>{cell.render("Cell")}</Td>
+                    );
+                  })}
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </Box>
+      
+      <Box display={{base:'block', lg:'none'}} mt={4}>
+        {paginationOptionsMobile()}
+      </Box>
 
-      <Flex justifyContent="space-between" m={4} alignItems="center">
+      <Flex justifyContent="space-between" mt={4} alignItems="center">
         <Flex>
           <Tooltip label="First Page">
             <IconButton
@@ -110,49 +192,12 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
           </Tooltip>
         </Flex>
 
-        <Flex alignItems="center">
-          <Text flexShrink="0" mr={8}>
-            Page{" "}
-            <Text fontWeight="bold" as="span">
-              {pageIndex + 1}
-            </Text>{" "}
-            of{" "}
-            <Text fontWeight="bold" as="span">
-              {pageOptions.length}
-            </Text>
-          </Text>
-          <Text flexShrink="0">Go to page:</Text>{" "}
-          <NumberInput
-            ml={2}
-            mr={8}
-            w={28}
-            min={1}
-            max={pageOptions.length}
-            onChange={(value: any) => {
-              const page = value ? value - 1 : 0;
-              gotoPage(page);
-            }}
-            defaultValue={pageIndex + 1}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Select
-            w={32}
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-            }}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </Select>
+        <Flex alignItems="center" display={{base:'none', lg:'flex'}}>
+          {renderPageInfo()}
+          
+          {renderPageSelection()}
+          
+          {renderLimitSelection()}
         </Flex>
 
         <Flex>

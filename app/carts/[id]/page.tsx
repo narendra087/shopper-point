@@ -136,7 +136,7 @@ const DetailCartPage = () => {
         </Box>
       </Flex>
       {!loading && <Flex justifyContent={'flex-end'}>
-        <Button variant={'outline'} colorScheme='blue'>Back</Button>
+        <Button variant={'outline'} colorScheme='blue' onClick={() => router.push('/carts')}>Back</Button>
       </Flex>}
     </Flex>
   )

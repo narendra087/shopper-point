@@ -1,12 +1,11 @@
-'use client'
-
+import { Metadata } from 'next'
 import { Providers } from '@/app/providers'
 
 import Layout from '@/app/components/layout/Layout'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Carts | Shopper Point',
-  description: 'Carts Ecommerce admin',
+  description: 'List Carts - Shopper Point Admin',
 }
 
 export default function RootLayout({

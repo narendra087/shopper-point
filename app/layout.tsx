@@ -1,12 +1,13 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Metadata } from 'next'
 
 import { Providers } from '@/app/providers'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Shopper Point',
+export const metadata: Metadata = {
+  title: 'Login | Shopper Point',
   description: 'Ecommerce Points',
 }
 

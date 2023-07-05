@@ -13,7 +13,6 @@ import {
 
 import { FiList, FiBarChart } from 'react-icons/fi'
 
-import BreadNav from '../components/BreadNav'
 import DataTable from '../components/datatable/DataTable'
 import ProductsFilter from '../components/product/ProductsFilter'
 import ProductsChart from '../components/product/ProductsChart'
@@ -122,16 +121,7 @@ const DashboardPage = () => {
   return (
     <>
       <Flex flexDirection={'column'} gap={6}>
-        <Box>
-          <Flex>
-            <Heading size={'xl'}>Dashboard Products</Heading>
-          </Flex>
-          <BreadNav
-            data={[
-              { label: 'Home', path: '/dashboard' },
-            ]}
-          />
-        </Box>
+        <Heading size={'xl'}>Dashboard Products</Heading>
         
         <Flex gap={4} flexDirection={{base:'column', lg:'column'}}>
           <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>

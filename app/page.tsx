@@ -1,6 +1,7 @@
 'use client'
 
 import styles from './page.module.css'
+import { useRouter } from 'next/navigation';
 import {
   Flex,
   Box,
@@ -17,12 +18,19 @@ import {
 } from '@chakra-ui/react';
 
 export default function Home() {
+  const router = useRouter()
+  
+  const handleLogin = () => {
+    router.push('/dashboard')
+  }
+  
   return (
     <Flex
       minH={'100vh'}
       align={'center'}
       justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
+      bg={useColorModeValue('gray.50', 'gray.800')}
+    >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'3xl'} textAlign={'center'}>Sign in to your <Text as={'span'} color={'blue.400'} textDecoration={'underline'}>Shopper</Text> account</Heading>
@@ -34,15 +42,16 @@ export default function Home() {
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
-          p={8}>
+          p={8}
+        >
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Username</FormLabel>
-              <Input type="username" />
+              <Input type="username" value={'admin'} readOnly />
             </FormControl>
             <FormControl id="password">
               <FormLabel>Password</FormLabel>
-              <Input type="password" />
+              <Input type="password" value={'password'} readOnly />
             </FormControl>
             
             <Button
@@ -50,7 +59,9 @@ export default function Home() {
               color={'white'}
               _hover={{
                 bg: 'blue.500',
-              }}>
+              }}
+              onClick={handleLogin}
+            >
               Sign in
             </Button>
           </Stack>

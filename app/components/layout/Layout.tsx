@@ -28,10 +28,7 @@ import {
 } from '@chakra-ui/react';
 import {
   FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
+  FiShoppingCart,
   FiMenu,
   FiChevronDown,
 } from 'react-icons/fi';
@@ -43,11 +40,8 @@ interface LinkItemProps {
   path: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Menu 1', icon: FiHome, path: 'dashboard' },
-  { name: 'Menu 2', icon: FiTrendingUp, path: '#' },
-  { name: 'Menu 3', icon: FiCompass, path: '#' },
-  { name: 'Menu 4', icon: FiStar, path: '#' },
-  { name: 'Menu 5', icon: FiSettings, path: '#' },
+  { name: 'Products', icon: FiHome, path: 'dashboard' },
+  { name: 'Carts', icon: FiShoppingCart, path: 'carts' },
 ];
 
 export default function Layout({
@@ -97,7 +91,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
-      {...rest}>
+      {...rest}
+    >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
           Logo
@@ -125,9 +120,11 @@ const NavItem = ({ icon, path, children, ...rest }: NavItemProps) => {
   return (
     <Link
       as={NextLink}
+      display={'block'}
       href={'/' + path}
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
+      _notFirst={{ mt:'4px' }}
     >
       <Flex
         align="center"

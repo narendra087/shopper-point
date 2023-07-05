@@ -24,7 +24,7 @@ const CartsPage = () => {
         {Header: 'User ID', accessor: 'userId'},
         {Header: 'Products', accessor: 'listProducts'},
         {Header: 'Total Quantity', accessor: 'totalQuantity'},
-        {Header: 'Price', accessor: 'total', Cell: (cellProps:any) => {return <div>${cellProps?.value || 0}</div>}},
+        {Header: 'Total Price', accessor: 'discountedTotal', Cell: (cellProps:any) => {return <>${cellProps?.value || 0}</>}},
         {
           Header: 'Action',
           accessor: 'id',

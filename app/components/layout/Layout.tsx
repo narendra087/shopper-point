@@ -1,7 +1,7 @@
 'use client'
 
 import React, { ReactNode } from 'react';
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import NextLink from 'next/link'
 import {
   IconButton,
@@ -95,7 +95,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+          Shopper Point
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -115,7 +115,7 @@ interface NavItemProps extends FlexProps {
 }
 const NavItem = ({ icon, path, children, ...rest }: NavItemProps) => {
   const pathName = usePathname();
-  const isActive = pathName === `/${path}`;
+  const isActive = pathName.indexOf(`/${path}`) > -1
   
   return (
     <Link
@@ -160,6 +160,12 @@ interface MobileProps extends FlexProps {
   onOpen: () => void;
 }
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const router = useRouter()
+  
+  const handleLogout = () => {
+    router.push('/')
+  }
+  
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -184,7 +190,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         fontSize="2xl"
         fontFamily="monospace"
         fontWeight="bold">
-        Logo
+        Shopper Point
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
@@ -220,10 +226,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
               <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem color={'red.500'} onClick={handleLogout}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

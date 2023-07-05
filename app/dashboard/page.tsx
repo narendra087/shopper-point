@@ -50,7 +50,7 @@ const DashboardPage = () => {
         {Header: 'Product', accessor: 'title'},
         {Header: 'Description', accessor: 'description'},
         {Header: 'Category', accessor: 'category'},
-        {Header: 'Price', accessor: 'price'},
+        {Header: 'Price', accessor: 'price', Cell: (cellProps:any) => {return <>${cellProps?.value || 0}</>}},
       ]
     }
   ], [])

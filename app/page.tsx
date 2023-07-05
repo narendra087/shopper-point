@@ -34,7 +34,7 @@ export default function Home() {
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'3xl'} textAlign={'center'}>Sign in to your <Text as={'span'} color={'blue.400'} textDecoration={'underline'}>Shopper</Text> account</Heading>
-          <Text fontSize={'lg'} color={'gray.600'}>
+          <Text fontSize={'lg'} color={'gray.600'} textAlign={'center'}>
             to enjoy all of our cool features ✌️
           </Text>
         </Stack>

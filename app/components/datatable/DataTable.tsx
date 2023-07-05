@@ -4,6 +4,7 @@ import {
   Table,
   Thead,
   Tbody,
+  Tfoot,
   Tr,
   Th,
   Td,
@@ -35,16 +36,14 @@ type DataTableProps = {
 }
 
 const DataTable = ({ columns, data  }: DataTableProps) => {
-  // Use the state and functions returned from useTable to build your UI
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
+    footerGroups,
+    page,
 
-    // The rest of these things are super handy, too ;)
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -139,7 +138,6 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
     )
   }
 
-  // Render the UI for your table
   return (
     <>
       <Box overflow={'auto'}>
@@ -180,6 +178,22 @@ const DataTable = ({ columns, data  }: DataTableProps) => {
               );
             })}
           </Tbody>
+          <Tfoot>
+            {footerGroups.map((footerGroup:any, i:number) => (
+              <Tr {...footerGroup.getFooterGroupProps()} key={i}>
+                {footerGroup.headers.map((column:any, j:number) => {
+                  // TODO: Improve this footer
+                  return typeof column?.Footer === 'string' ? (
+                    <Td {...column.getFooterProps()} key={j} fontWeight={'bold'} background={'gray.100'}>
+                      {column?.Footer || null}
+                    </Td>
+                  ) : (
+                    null
+                  )
+                })}
+              </Tr>
+            ))}
+          </Tfoot>
         </Table>
       </Box>
       

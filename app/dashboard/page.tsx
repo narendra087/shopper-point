@@ -120,12 +120,12 @@ const DashboardPage = () => {
   return (
     <>
       <Flex flexDirection={'column'} gap={6}>
-        <Heading size={'xl'}>Dashboard Products</Heading>
+        <Heading size={'lg'}>Dashboard Products</Heading>
         
         <Flex gap={4} flexDirection={{base:'column', lg:'column'}}>
           <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>
             <Flex justifyContent={'space-between'} alignItems={'center'}>
-              <Heading as={'h2'} size={'lg'}>{activeTab === 'table' ? 'List Products' : 'Products Chart'}</Heading>
+              <Heading as={'h2'} size={'md'}>{activeTab === 'table' ? 'List Products' : 'Products Chart'}</Heading>
               <Flex alignItems={'center'} gap={4}>
                 <Flex>
                   <IconButton

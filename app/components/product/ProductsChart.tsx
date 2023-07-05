@@ -115,7 +115,7 @@ const ProductsChart = ({data, loading}: ComponentProps) => {
           <Spinner size={'xl'} />
           </Flex>
       ) : (
-        <Grid templateColumns={'repeat(2, 1fr)'} gap={4}>
+        <Grid templateColumns={{base: '1fr', lg:'repeat(2, 1fr)'}} gap={4}>
           {brands.map((brand) => (
             <GridItem key={brand}>
               <Chart

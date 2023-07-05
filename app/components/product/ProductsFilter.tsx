@@ -90,11 +90,21 @@ const ProductsFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentP
     onClose()
   }
   
+  const resetFilter = () => {
+    const filter:FilterType = {
+      keyword: '',
+      category: '',
+      price: [minPrice, maxPrice]
+    }
+    
+    applySavedFilter(filter)
+  }
+  
   const wordingFilter = (filter:FilterType) => {
     const { keyword, category, price } = filter
     let text = `${keyword ? '"'+keyword+'"' : 'All products'} ` +
       `in ${category ? '"'+category+'"' : 'all category'} ` +
-      `${(price[0] !== minPrice && price[1] !== maxPrice) ? 'with price between $' + price[0] + ' and $' + price[1] : ''}`
+      `${(price[0] !== minPrice || price[1] !== maxPrice) ? 'with price between $' + price[0] + ' and $' + price[1] : ''}`
     
     return text
   }
@@ -160,20 +170,25 @@ const ProductsFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentP
             </Stack>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant='outline' mr={3} onClick={cancelFilter}>
-              Cancel
+          <DrawerFooter display={'flex'} justifyContent={'space-between'}>
+            <Button variant='link' colorScheme='gray' onClick={resetFilter}>
+              Clear
             </Button>
-            <Button
-              bg={'blue.500'}
-              color={'white'}
-              _hover={{
-                bg: 'blue.600',
-              }}
-              onClick={applyFilter}
-            >
-              Apply
-            </Button>
+            <Box>
+              <Button variant='outline' mr={3} onClick={cancelFilter}>
+                Cancel
+              </Button>
+              <Button
+                bg={'blue.500'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.600',
+                }}
+                onClick={applyFilter}
+              >
+                Apply
+              </Button>
+            </Box>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

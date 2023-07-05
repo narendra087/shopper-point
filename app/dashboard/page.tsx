@@ -47,9 +47,10 @@ const DashboardPage = () => {
       Header: 'Products',
       columns: [
         {Header: 'Id', accessor: 'id'},
-        {Header: 'Product', accessor: 'title'},
-        {Header: 'Description', accessor: 'description'},
+        {Header: 'Product Name', accessor: 'title'},
+        {Header: 'Brand', accessor: 'brand'},
         {Header: 'Category', accessor: 'category'},
+        {Header: 'Stock', accessor: 'stock'},
         {Header: 'Price', accessor: 'price', Cell: (cellProps:any) => {return <>${cellProps?.value || 0}</>}},
       ]
     }

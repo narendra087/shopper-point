@@ -100,7 +100,13 @@ const ProductsChart = ({data, loading}: ComponentProps) => {
       },
       xaxis: {
         categories: categoryData?.[brand] || [],
-        
+        labels: {
+          trim: true,
+          maxHeight: 50,
+          style: {
+            fontSize: '12px',
+          }
+        }
       },
     }
     

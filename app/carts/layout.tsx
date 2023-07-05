@@ -5,8 +5,8 @@ import { Providers } from '@/app/providers'
 import Layout from '@/app/components/layout/Layout'
 
 export const metadata = {
-  title: 'Dashboards | Shopper Point',
-  description: 'Ecommerce dashboard admin',
+  title: 'Carts | Shopper Point',
+  description: 'Carts Ecommerce admin',
 }
 
 export default function RootLayout({

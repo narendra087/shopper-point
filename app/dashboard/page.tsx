@@ -1,13 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Box,
   Button,
   Flex,
   Heading,
   IconButton,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 
@@ -21,19 +20,6 @@ import { addFilter } from '@/app/redux/slices/filterSlice'
 import { useAppDispatch } from '@/app/redux/hooks'
 
 import axios from 'axios'
-
-const columnsTable = [
-  {
-    Header: 'Products',
-    columns: [
-      {Header: 'Id', accessor: 'id'},
-      {Header: 'Product', accessor: 'title'},
-      {Header: 'Description', accessor: 'description'},
-      {Header: 'Category', accessor: 'category'},
-      {Header: 'Price', accessor: 'price'},
-    ]
-  }
-]
 
 type DataTableType = {
   id: number,
@@ -56,6 +42,19 @@ const minPrice = 0
 const maxPrice = 5000
 
 const DashboardPage = () => {
+  const columnsTable = useMemo(() => [
+    {
+      Header: 'Products',
+      columns: [
+        {Header: 'Id', accessor: 'id'},
+        {Header: 'Product', accessor: 'title'},
+        {Header: 'Description', accessor: 'description'},
+        {Header: 'Category', accessor: 'category'},
+        {Header: 'Price', accessor: 'price'},
+      ]
+    }
+  ], [])
+  
   const {isOpen, onOpen, onClose} = useDisclosure()
   const [filteredData, setFilteredData] = useState<DataTableType[]>([])
   const [initData, setInitData] = useState<DataTableType[]>([])

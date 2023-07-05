@@ -3,25 +3,18 @@
 import React, { useEffect, useState } from 'react'
 import {
   Box,
-  Divider,
   Flex,
   Heading,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Select,
-  Stack,
   Text,
-  Button,
   useDisclosure,
 } from '@chakra-ui/react'
-import { FiSearch } from 'react-icons/fi'
 
 import BreadNav from '../components/BreadNav'
 import DataTable from '../components/datatable/DataTable'
-import PriceSlider from '../components/PriceSlider'
-
 import ProductFilter from '../components/filter/ProductFilter'
+
+import { addFilter } from '@/app/redux/slices/filterSlice'
+import { useAppDispatch } from '@/app/redux/hooks'
 
 import axios from 'axios'
 
@@ -47,6 +40,7 @@ type DataTableType = {
 }
 
 type FilterType = {
+  id?: number,
   keyword: string,
   category: string,
   price: number[]
@@ -60,6 +54,8 @@ const DashboardPage = () => {
   const [filteredData, setFilteredData] = useState<DataTableType[]>([])
   const [initData, setInitData] = useState<DataTableType[]>([])
   const [categories, setCategories] = useState([])
+  
+  const dispatch = useAppDispatch()
   
   useEffect(() => {
     getTableData()
@@ -106,6 +102,7 @@ const DashboardPage = () => {
     })
     
     setFilteredData(baseData)
+    dispatch(addFilter(filter))
   }
   
   return (

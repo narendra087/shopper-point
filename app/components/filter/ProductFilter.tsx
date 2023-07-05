@@ -15,11 +15,16 @@ import {
   Select,
   Stack,
   Text,
+  Flex,
+  Tag,
 } from '@chakra-ui/react'
 import { FiSearch } from 'react-icons/fi'
 import PriceSlider from '../PriceSlider'
 
+import { useAppSelector } from '@/app/redux/hooks'
+
 type FilterType = {
+  id?: number,
   keyword: string,
   category: string,
   price: number[]
@@ -33,17 +38,18 @@ type ComponentProps = {
 }
 
 const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentProps) => {
+  const savedFilter = useAppSelector((state) => state.filter.savedFilter)
+  
   const minPrice = 0
   const maxPrice = 5000
   const [initFilter, setInitFilter] = useState<FilterType>({keyword: '', category: '', price: [minPrice, maxPrice]})
 
   const [keyword, setKeyword] = useState('')
   const [category, setCategory] = useState('')
-  const [price, setPrice] = useState<number[]>([])
+  const [price, setPrice] = useState<number[]>([minPrice, maxPrice])
   
   useEffect(() => {
     if (isOpen) {
-      console.log('update init')
       setInitFilter({keyword, category, price})
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,12 +70,33 @@ const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentPr
     onClose()
   }
   
+  const applySavedFilter = (filter: FilterType) => {
+    setKeyword(filter.keyword)
+    setCategory(filter.category)
+    setPrice(filter.price)
+    
+    if (onFilter) {
+      onFilter(filter)
+    }
+    
+    onClose()
+  }
+  
   const cancelFilter = () => {
     setKeyword(initFilter.keyword)
     setCategory(initFilter.category)
     setPrice(initFilter.price)
     
     onClose()
+  }
+  
+  const wordingFilter = (filter:FilterType) => {
+    const { keyword, category, price } = filter
+    let text = `${keyword ? '"'+keyword+'"' : 'All products'} ` +
+      `in ${category ? '"'+category+'"' : 'all category'} ` +
+      `${(price[0] !== minPrice && price[1] !== maxPrice) ? 'with price between $' + price[0] + ' and $' + price[1] : ''}`
+    
+    return text
   }
   
   return (
@@ -110,6 +137,26 @@ const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentPr
                 <Text mb={1}>Price</Text>
                 <PriceSlider onSliderChange={setPrice} initialPrice={price} />
               </Box>
+              
+              {savedFilter.length && (
+                <Box>
+                  <Text mb={1}>Recent Filter</Text>
+                  <Flex gap={2} flexDirection={'column'}>
+                    {savedFilter.map((filter:FilterType, index:number) => (
+                      <Tag
+                        key={index}
+                        variant='outline'
+                        colorScheme='blue'
+                        p='6px 8px'
+                        cursor='pointer'
+                        onClick={() => applySavedFilter(filter)}
+                      >
+                        {wordingFilter(filter)}
+                      </Tag>
+                    ))}
+                  </Flex>
+                </Box>
+              )}
             </Stack>
           </DrawerBody>
 

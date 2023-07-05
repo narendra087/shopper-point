@@ -1,6 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+type FilterType = {
+  id?: number,
+  keyword: string,
+  category: string,
+  price: number[]
+}
+
+type InitialState = {
+  savedFilter: FilterType[]
+}
+
+const initialState:InitialState = {
   savedFilter: [],
 }
 
@@ -9,7 +20,17 @@ export const filterSlice = createSlice({
   initialState,
   reducers: {
     addFilter: (state, action) => {
-      console.log(action.payload)
+      if (!action.payload?.id) {
+        const fiiter = {
+          id: Date.now(),
+          ...action.payload
+        }
+        
+        if (state.savedFilter.length >= 5) {
+          state.savedFilter.pop()
+        }
+        state.savedFilter.unshift(fiiter)
+      }
     },
   }
 })

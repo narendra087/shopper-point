@@ -3,15 +3,20 @@
 import React, { useEffect, useState } from 'react'
 import {
   Box,
+  Button,
   Flex,
   Heading,
+  IconButton,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
 
+import { FiList, FiBarChart } from 'react-icons/fi'
+
 import BreadNav from '../components/BreadNav'
 import DataTable from '../components/datatable/DataTable'
-import ProductFilter from '../components/filter/ProductFilter'
+import ProductsFilter from '../components/product/ProductsFilter'
+import ProductsChart from '../components/product/ProductsChart'
 
 import { addFilter } from '@/app/redux/slices/filterSlice'
 import { useAppDispatch } from '@/app/redux/hooks'
@@ -36,7 +41,9 @@ type DataTableType = {
   title: string,
   description: string,
   category: string,
-  price: number
+  price: number,
+  stock: number,
+  brand: string,
 }
 
 type FilterType = {
@@ -54,6 +61,9 @@ const DashboardPage = () => {
   const [filteredData, setFilteredData] = useState<DataTableType[]>([])
   const [initData, setInitData] = useState<DataTableType[]>([])
   const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  
+  const [activeTab, setActiveTab] = useState('table')
   
   const dispatch = useAppDispatch()
   
@@ -63,6 +73,8 @@ const DashboardPage = () => {
   }, [])
   
   const getTableData = async() => {
+    setLoading(true)
+    
     try {
       const res = await axios.get('/api/products')
       setInitData(res.data.products)
@@ -70,6 +82,8 @@ const DashboardPage = () => {
     } catch (error) {
       console.log(error)
     }
+    
+    setLoading(false)
   }
   
   const getCategories = async() => {
@@ -122,21 +136,48 @@ const DashboardPage = () => {
         <Flex gap={4} flexDirection={{base:'column', lg:'column'}}>
           <Box w={'100%'} flex={3} borderRadius={6} bg={'white'} p={4}>
             <Flex justifyContent={'space-between'} alignItems={'center'}>
-              <Heading as={'h2'} size={'lg'}>List Products</Heading>
-              <Text onClick={onOpen} cursor={'pointer'} fontSize={'md'}>Filter</Text>
+              <Heading as={'h2'} size={'lg'}>{activeTab === 'table' ? 'List Products' : 'Products Chart'}</Heading>
+              <Flex alignItems={'center'} gap={4}>
+                <Flex>
+                  <IconButton
+                    variant={activeTab === 'table' ? 'solid' : 'outline'}
+                    pointerEvents={activeTab === 'table' ? 'none' : 'auto'}
+                    onClick={() => setActiveTab('table')}
+                    colorScheme='blue'
+                    aria-label='Table'
+                    borderRadius={'6px 0 0 6px'}
+                    icon={<FiList />}
+                  />
+                  <IconButton
+                    variant={activeTab === 'chart' ? 'solid' : 'outline'}
+                    pointerEvents={activeTab === 'chart' ? 'none' : 'auto'}
+                    onClick={() => setActiveTab('chart')}
+                    colorScheme='blue'
+                    aria-label='Chart'
+                    borderRadius={'0 6px 6px 0'}
+                    borderLeft={'none'}
+                    icon={<FiBarChart />}
+                  />
+                </Flex>
+                {activeTab === 'table' && <Button onClick={onOpen}>Filter</Button>}
+              </Flex>
             </Flex>
             
             <Box mt={5}>
-              <DataTable
-                columns={columnsTable}
-                data={filteredData}
-              />
+              { activeTab === 'table' ? (
+                <DataTable
+                  columns={columnsTable}
+                  data={filteredData}
+                />
+              ) : (
+                <ProductsChart data={initData} loading={loading} />
+              )}
             </Box>
           </Box>
         </Flex>
       </Flex>
       
-      <ProductFilter isOpen={isOpen} onClose={onClose} categories={categories} onFilter={onFilter} />
+      <ProductsFilter isOpen={isOpen} onClose={onClose} categories={categories} onFilter={onFilter} />
     </>
   )
 }

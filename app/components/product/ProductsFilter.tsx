@@ -37,7 +37,7 @@ type ComponentProps = {
   categories?: string[],
 }
 
-const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentProps) => {
+const ProductsFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentProps) => {
   const savedFilter = useAppSelector((state) => state.filter.savedFilter)
   
   const minPrice = 0
@@ -180,4 +180,4 @@ const ProductFilter = ({isOpen, onClose, onFilter, categories = []}: ComponentPr
   )
 }
 
-export default ProductFilter
+export default ProductsFilter
